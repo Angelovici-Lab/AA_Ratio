@@ -9,7 +9,8 @@ A script written in R to create amino acid ratios.
         - -i CSV_input_file
         - -t FAA/BAA
         - -o Output_directory
-        - -n Output_filename 
+        - -n Output_filename (No file extension)
 
 ## Example
-Rscript AA_Ratio.R -i 07_03_2019_Arabidopsis_1001_BAA.csv -t BAA -o ./Ratio_data -n 03_13_2020_Arabidopsis_1001_BAA
+* Rscript AA_Ratio.R -i 07_03_2019_Arabidopsis_1001_BAA.csv -t BAA -o ./Ratio_data -n 03_13_2020_Arabidopsis_1001_BAA
+* Rscript AA_Ratio.R -i /home/uname/data/07_03_2019_Arabidopsis_1001_FAA.csv -t FAA -o /home/uname/data/Ratio_data -n 03_13_2020_Arabidopsis_1001_FAA
