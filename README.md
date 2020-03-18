@@ -1,8 +1,24 @@
 # AA_Ratio
 A script written in R to create amino acid ratios.
 
+## Upgrade Packages
+* update.packages(ask=FALSE)
+
+## Install Packages (if these packages are not in your machine)
+* install.packages("dplyr", dependencies = TRUE)
+* install.packages("dplyr", dependencies = TRUE)
+* install.packages("tidyr", dependencies = TRUE)
+* install.packages("tibble", dependencies = TRUE)
+* install.packages("stringr", dependencies = TRUE)
+* install.packages("purrr", dependencies = TRUE)
+* install.packages("lubridate", dependencies = TRUE)
+* install.packages("ggplot2", dependencies = TRUE)
+* install.packages("foreach", dependencies = TRUE)
+* install.packages("doParallel", dependencies = TRUE)
+* install.packages("argparse", dependencies = TRUE)
+
 ## Usage
-1. Clone the repository: git clone https://github.com/angelovicilab/AA_Ratio.git
+1. Clone the repository: git clone https://github.com/Angelovici-Lab/AA_Ratio.git
 2. cd AA_Ratio
 3. Rscript AA_Ratio.R [COMMANDS]
     - COMMANDS:
