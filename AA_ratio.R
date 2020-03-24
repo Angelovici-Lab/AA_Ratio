@@ -326,6 +326,34 @@ if(type == "FAA"){
 
 
 #####################################################################################################################
+# Remove Inf, -Inf, and NaN
+#####################################################################################################################
+absolute_vs_total_dat[absolute_vs_total_dat == Inf] = NA
+bcaa_fam_dat[bcaa_fam_dat == Inf] = NA
+glu_fam_dat[glu_fam_dat == Inf] = NA
+pyr_fam_dat[pyr_fam_dat == Inf] = NA
+asp_fam_dat[asp_fam_dat == Inf] = NA
+shikimate_fam_dat[shikimate_fam_dat == Inf] = NA
+ser_fam_dat[ser_fam_dat == Inf] = NA
+
+absolute_vs_total_dat[absolute_vs_total_dat == -Inf] = NA
+bcaa_fam_dat[bcaa_fam_dat == -Inf] = NA
+glu_fam_dat[glu_fam_dat == -Inf] = NA
+pyr_fam_dat[pyr_fam_dat == -Inf] = NA
+asp_fam_dat[asp_fam_dat == -Inf] = NA
+shikimate_fam_dat[shikimate_fam_dat == -Inf] = NA
+ser_fam_dat[ser_fam_dat == -Inf] = NA
+
+absolute_vs_total_dat[absolute_vs_total_dat == NaN] = NA
+bcaa_fam_dat[bcaa_fam_dat == NaN] = NA
+glu_fam_dat[glu_fam_dat == NaN] = NA
+pyr_fam_dat[pyr_fam_dat == NaN] = NA
+asp_fam_dat[asp_fam_dat == NaN] = NA
+shikimate_fam_dat[shikimate_fam_dat == NaN] = NA
+ser_fam_dat[ser_fam_dat == NaN] = NA
+
+
+#####################################################################################################################
 # Save Ratios
 #####################################################################################################################
 if(!is.null(absolute_vs_total_dat)){
