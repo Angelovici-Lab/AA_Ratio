@@ -117,9 +117,9 @@ colnames(baa_dat)[!is.na(index)] = aa_dat[index,3][!is.na(index)]
 #####################################################################################################################
 # Calculate Total
 #####################################################################################################################
-dat = dat %>% mutate(Total = rowSums(.[which(!is.na(index))])) %>% as.data.frame(stringsAsFactors = FALSE)
-faa_dat = faa_dat %>% mutate(Total = rowSums(.[which(!is.na(index))])) %>% as.data.frame(stringsAsFactors = FALSE)
-baa_dat = baa_dat %>% mutate(total = rowSums(.[which(!is.na(index))])) %>% as.data.frame(stringsAsFactors = FALSE)
+dat = dat %>% mutate(Total = rowSums(.[which(!is.na(index))], na.rm=TRUE)) %>% as.data.frame(stringsAsFactors = FALSE)
+faa_dat = faa_dat %>% mutate(Total = rowSums(.[which(!is.na(index))], na.rm=TRUE)) %>% as.data.frame(stringsAsFactors = FALSE)
+baa_dat = baa_dat %>% mutate(total = rowSums(.[which(!is.na(index))], na.rm=TRUE)) %>% as.data.frame(stringsAsFactors = FALSE)
 
 
 #####################################################################################################################
