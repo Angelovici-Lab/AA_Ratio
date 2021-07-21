@@ -1,14 +1,21 @@
 add_column <- function(dat = NULL, nominator = NULL, denominator = NULL){
-    if(is.null(dat) | is.null(nominator) | is.null(denominator)){
-        return(NULL)
-    }
-    if(all(unique(c(nominator, denominator)) %in% colnames(dat))){
-        dat = dat %>% mutate(newly_add_column = rowSums(.[nominator])/rowSums(.[denominator]))
-        colnames(dat)[colnames(dat) == "newly_add_column"] = paste(
-            paste(nominator, collapse = ""),
-            paste(denominator, collapse = ""),
-            sep = "_vs_"
-        )
+    if (!is.null(dat) & !is.null(nominator) & !is.null(denominator)) {
+        if(all(unique(c(nominator, denominator)) %in% colnames(dat))){
+            nominator = sort(unique(nominator))
+            denominator = sort(unique(denominator))
+            dat = dat %>% mutate(newly_add_column = rowSums(.[nominator])/rowSums(.[denominator]))
+            colnames(dat)[colnames(dat) == "newly_add_column"] = paste(
+              paste(nominator, collapse = ""),
+              paste(denominator, collapse = ""),
+              sep = "_vs_"
+            )
+        }
+    } else if(!is.null(dat) & !is.null(nominator) & is.null(denominator)){
+        if(all(unique(nominator) %in% colnames(dat)) & length(unique(nominator))>1){
+            nominator = sort(unique(nominator))
+            dat = dat %>% mutate(newly_add_column = rowSums(.[nominator]))
+            colnames(dat)[colnames(dat) == "newly_add_column"] = paste(nominator, collapse = "")
+        }
     }
     return(dat)
 }
@@ -40,51 +47,59 @@ func_BCAA_Fam <- function(dat = NULL, type = NULL){
     }
 
     if(type == "FAA"){
-        if(all(c("I", "Total") %in% colnames(dat))){ dat$I_vs_Total = dat$I/dat$Total }
-        if(all(c("V", "Total") %in% colnames(dat))){ dat$V_vs_Total = dat$V/dat$Total }
-        if(all(c("L", "Total") %in% colnames(dat))){ dat$L_vs_Total = dat$L/dat$Total }
-        if(all(c("I", "V") %in% colnames(dat))){ dat$I_vs_V = dat$I/dat$V }
-        if(all(c("I", "L") %in% colnames(dat))){ dat$I_vs_L = dat$I/dat$L }
-        if(all(c("I", "V") %in% colnames(dat))){ dat$I_vs_IV = dat$I/(dat$I+dat$V) }
-        if(all(c("I", "L") %in% colnames(dat))){ dat$I_vs_IL = dat$I/(dat$I+dat$L) }
-        if(all(c("I", "V", "L") %in% colnames(dat))){ dat$I_vs_VL = dat$I/(dat$V+dat$L) }
-        if(all(c("I", "V", "L") %in% colnames(dat))){ dat$I_vs_IVL = dat$I/(dat$I+dat$V+dat$L) }
-        if(all(c("V", "I") %in% colnames(dat))){ dat$V_vs_I = dat$V/dat$I }
-        if(all(c("V", "L") %in% colnames(dat))){ dat$V_vs_L = dat$V/dat$L }
-        if(all(c("V", "I") %in% colnames(dat))){ dat$V_vs_IV = dat$V/(dat$I+dat$V) }
-        if(all(c("V", "I", "L") %in% colnames(dat))){ dat$V_vs_IL = dat$V/(dat$I+dat$L) }
-        if(all(c("V", "L") %in% colnames(dat))){ dat$V_vs_VL = dat$V/(dat$V+dat$L) }
-        if(all(c("V", "I", "L") %in% colnames(dat))){ dat$V_vs_IVL = dat$V/(dat$I+dat$V+dat$L) }
-        if(all(c("L", "I") %in% colnames(dat))){ dat$L_vs_I = dat$L/dat$I }
-        if(all(c("L", "V") %in% colnames(dat))){ dat$L_vs_V = dat$L/dat$V }
-        if(all(c("L", "I", "V") %in% colnames(dat))){ dat$L_vs_IV = dat$L/(dat$I+dat$V) }
-        if(all(c("L", "I") %in% colnames(dat))){ dat$L_vs_IL = dat$L/(dat$I+dat$L) }
-        if(all(c("V", "L") %in% colnames(dat))){ dat$L_vs_VL = dat$L/(dat$V+dat$L) }
-        if(all(c("V", "I", "L") %in% colnames(dat))){ dat$L_vs_IVL = dat$L/(dat$I+dat$V+dat$L) }
+        dat = add_column(dat, c("I", "V"))
+        dat = add_column(dat, c("I", "L"))
+        dat = add_column(dat, c("L", "V"))
+        dat = add_column(dat, c("I", "L", "V"))
+        dat = add_column(dat, "I", "Total")
+        dat = add_column(dat, "V", "Total")
+        dat = add_column(dat, "L", "Total")
+        dat = add_column(dat, "I", "V")
+        dat = add_column(dat, "I", "L")
+        dat = add_column(dat, "I", c("I", "V"))
+        dat = add_column(dat, "I", c("I", "L"))
+        dat = add_column(dat, "I", c("V", "L"))
+        dat = add_column(dat, "I", c("I", "V", "L"))
+        dat = add_column(dat, "V", "I")
+        dat = add_column(dat, "V", "L")
+        dat = add_column(dat, "V", c("I", "V"))
+        dat = add_column(dat, "V", c("I", "L"))
+        dat = add_column(dat, "V", c("V", "L"))
+        dat = add_column(dat, "V", c("I", "V", "L"))
+        dat = add_column(dat, "L", "I")
+        dat = add_column(dat, "L", "V")
+        dat = add_column(dat, "L", c("I", "V"))
+        dat = add_column(dat, "L", c("I", "L"))
+        dat = add_column(dat, "L", c("V", "L"))
+        dat = add_column(dat, "L", c("I", "V", "L"))
         dat = keep_column(dat, c("V", "I", "L", "Total"))
         return(dat)
     } else if(type == "BAA"){
-        if(all(c("i", "total") %in% colnames(dat))){ dat$i_vs_total = dat$i/dat$total }
-        if(all(c("v", "total") %in% colnames(dat))){ dat$v_vs_total = dat$v/dat$total }
-        if(all(c("l", "total") %in% colnames(dat))){ dat$l_vs_total = dat$l/dat$total }
-        if(all(c("i", "v") %in% colnames(dat))){ dat$i_vs_v = dat$i/dat$v }
-        if(all(c("i", "l") %in% colnames(dat))){ dat$i_vs_l = dat$i/dat$l }
-        if(all(c("i", "v") %in% colnames(dat))){ dat$i_vs_iv = dat$i/(dat$i+dat$v) }
-        if(all(c("i", "l") %in% colnames(dat))){ dat$i_vs_il = dat$i/(dat$i+dat$l) }
-        if(all(c("i", "v", "l") %in% colnames(dat))){ dat$i_vs_vl = dat$i/(dat$v+dat$l) }
-        if(all(c("i", "v", "l") %in% colnames(dat))){ dat$i_vs_ivl = dat$i/(dat$i+dat$v+dat$l) }
-        if(all(c("v", "i") %in% colnames(dat))){ dat$v_vs_i = dat$v/dat$i }
-        if(all(c("v", "l") %in% colnames(dat))){ dat$v_vs_l = dat$v/dat$l }
-        if(all(c("v", "i") %in% colnames(dat))){ dat$v_vs_iv = dat$v/(dat$i+dat$v) }
-        if(all(c("v", "i", "l") %in% colnames(dat))){ dat$v_vs_il = dat$v/(dat$i+dat$l) }
-        if(all(c("v", "l") %in% colnames(dat))){ dat$v_vs_vl = dat$v/(dat$v+dat$l) }
-        if(all(c("v", "i", "l") %in% colnames(dat))){ dat$v_vs_ivl = dat$v/(dat$i+dat$v+dat$l) }
-        if(all(c("l", "i") %in% colnames(dat))){ dat$l_vs_i = dat$l/dat$i }
-        if(all(c("l", "v") %in% colnames(dat))){ dat$l_vs_v = dat$l/dat$v }
-        if(all(c("l", "i", "v") %in% colnames(dat))){ dat$l_vs_iv = dat$l/(dat$i+dat$v) }
-        if(all(c("l", "i") %in% colnames(dat))){ dat$l_vs_il = dat$l/(dat$i+dat$l) }
-        if(all(c("v", "l") %in% colnames(dat))){ dat$l_vs_vl = dat$l/(dat$v+dat$l) }
-        if(all(c("v", "i", "l") %in% colnames(dat))){ dat$l_vs_ivl = dat$l/(dat$i+dat$v+dat$l) }
+        dat = add_column(dat, c("i", "v"))
+        dat = add_column(dat, c("i", "l"))
+        dat = add_column(dat, c("l", "v"))
+        dat = add_column(dat, c("i", "l", "v"))
+        dat = add_column(dat, "i", "total")
+        dat = add_column(dat, "v", "total")
+        dat = add_column(dat, "l", "total")
+        dat = add_column(dat, "i", "v")
+        dat = add_column(dat, "i", "l")
+        dat = add_column(dat, "i", c("i", "v"))
+        dat = add_column(dat, "i", c("i", "l"))
+        dat = add_column(dat, "i", c("v", "l"))
+        dat = add_column(dat, "i", c("i", "v", "l"))
+        dat = add_column(dat, "v", "i")
+        dat = add_column(dat, "v", "l")
+        dat = add_column(dat, "v", c("i", "v"))
+        dat = add_column(dat, "v", c("i", "l"))
+        dat = add_column(dat, "v", c("v", "l"))
+        dat = add_column(dat, "v", c("i", "v", "l"))
+        dat = add_column(dat, "l", "i")
+        dat = add_column(dat, "l", "v")
+        dat = add_column(dat, "l", c("i", "v"))
+        dat = add_column(dat, "l", c("i", "l"))
+        dat = add_column(dat, "l", c("v", "l"))
+        dat = add_column(dat, "l", c("i", "v", "l"))
         dat = keep_column(dat, c("i", "v", "l", "total"))
         return(dat)
     }

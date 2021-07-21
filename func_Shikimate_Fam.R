@@ -1,14 +1,21 @@
 add_column <- function(dat = NULL, nominator = NULL, denominator = NULL){
-    if(is.null(dat) | is.null(nominator) | is.null(denominator)){
-        return(NULL)
-    }
-    if(all(unique(c(nominator, denominator)) %in% colnames(dat))){
-        dat = dat %>% mutate(newly_add_column = rowSums(.[nominator])/rowSums(.[denominator]))
-        colnames(dat)[colnames(dat) == "newly_add_column"] = paste(
-            paste(nominator, collapse = ""),
-            paste(denominator, collapse = ""),
-            sep = "_vs_"
-        )
+    if (!is.null(dat) & !is.null(nominator) & !is.null(denominator)) {
+        if(all(unique(c(nominator, denominator)) %in% colnames(dat))){
+            nominator = sort(unique(nominator))
+            denominator = sort(unique(denominator))
+            dat = dat %>% mutate(newly_add_column = rowSums(.[nominator])/rowSums(.[denominator]))
+            colnames(dat)[colnames(dat) == "newly_add_column"] = paste(
+              paste(nominator, collapse = ""),
+              paste(denominator, collapse = ""),
+              sep = "_vs_"
+            )
+        }
+    } else if(!is.null(dat) & !is.null(nominator) & is.null(denominator)){
+        if(all(unique(nominator) %in% colnames(dat)) & length(unique(nominator))>1){
+            nominator = sort(unique(nominator))
+            dat = dat %>% mutate(newly_add_column = rowSums(.[nominator]))
+            colnames(dat)[colnames(dat) == "newly_add_column"] = paste(nominator, collapse = "")
+        }
     }
     return(dat)
 }
