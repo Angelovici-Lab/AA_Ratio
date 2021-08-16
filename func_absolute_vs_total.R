@@ -37,7 +37,7 @@ func_absolute_vs_total <- function(dat = NULL, type = NULL){
         if(("s" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$s_vs_total = dat$s/dat$total }
         if(("t" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$t_vs_total = dat$t/dat$total }
         if(("v" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$v_vs_total = dat$v/dat$total }
-        if(("x" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$x_vs_total = dat$x/dat$total }
+        if(("b" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$b_vs_total = dat$b/dat$total }
         if(("y" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$y_vs_total = dat$y/dat$total }
         if(("z" %in% colnames(dat)) & ("total" %in% colnames(dat))){ dat$z_vs_total = dat$z/dat$total }
         return(dat)
